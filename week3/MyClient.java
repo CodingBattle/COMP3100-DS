@@ -9,5 +9,7 @@ dout.writeUTF("HELO");
 dout.flush();  
 dout.close();  
 s.close();  
-}catch(Exception e){System.out.println(e);}  
+}catch(Exception e){System.out.println(e);
 }  
+}
+}
