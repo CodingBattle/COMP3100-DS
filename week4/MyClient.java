@@ -12,14 +12,13 @@ BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 //BufferedReader in= new BufferedReader(new InputStreamReader(s.getInputStream()));  
 
 //send HELO and receive ok
-  
 String message = "HELO\n";
 out.write(message.getBytes());
-String response = reader.readLIne();
+String response = reader.readLine();
 System.out.println(response);
 
 //send AUTH and receive ok
-String username = "testuser"; // or use System.getProperty("user.name")
+String username = "SANGGON"; // or use System.getProperty("user.name")
 message = "AUTH " + username + "\n";
 out.write(message.getBytes());
 response = reader.readLine();
@@ -43,9 +42,12 @@ response = reader.readLine();
 System.out.println(response);
 
 // repeat for remaining jobs
+message = "SCHD " + numCPUs + " 0\n";
+out.write(message.getBytes());
+response = reader.readLine();
+System.out.println(response);
 
 // close the socket
-
 socket.close();  
 
 // Send the QUIT command to the server to terminate the simulation
