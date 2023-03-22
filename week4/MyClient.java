@@ -2,46 +2,59 @@ import java.net.*;
 import java.io.*;  
 class MyClient{  
 public static void main(String args[])throws Exception{  
-Socket s=new Socket("localhost",50000);  
-DataInputStream din=new DataInputStream(s.getInputStream());  
-DataOutputStream dout=new DataOutputStream(s.getOutputStream());  
-BufferedReader br=new BufferedReader(new InputStreamReader(System.in));  
-BufferedReader in=new BufferedReader(new InputStreamReader(s.getInputStream()));  
+
+Socket socket = new Socket("localhost",50000);  
+OutputStream out = socket.getOutputStream();
+InputStream in = socket.getInputStream();
+BufferedReader reader = new BufferedReader(new InputStreamReader(in));  
+//DataInputStream din=new DataInputStream(s.getInputStream());  
+//DataOutputStream dout=new DataOutputStream(s.getOutputStream());  
+//BufferedReader in= new BufferedReader(new InputStreamReader(s.getInputStream()));  
+
+//send HELO and receive ok
   
-String str="",str2="";  
-String username=null;
-try { 
-    username = System.getProperty("user.name");
-    if(username==null){
-        System.out.println("System.getProperty(\"user.name\") return: NULL");
-    } else {
-        System.out.println("System.getProperty(\"user.name\") return:" + username);
-    }
-    } catch(Exception e){
-        //error
-        System.out.println(e.toString());
-    }
-    
-//logger.info("User Name: " + username);
+String message = "HELO\n";
+out.write(message.getBytes());
+String response = reader.readLIne();
+System.out.println(response);
 
-//create an object of SmtpClient
-SmtpClient client = new SmtpClient("smtp.gmail.com");
-//Set username,password,port and sercurity options
-client=setUsername("your.email@gmail.com");
-client=setPassword("your.password");
-client.setPort(50000);
-//send emails
-client.send(new MailMessage("sender@domain.com", "receiver@domain.com", "Sending Email via proxy", "Test email"));
+//send AUTH and receive ok
+String username = "testuser"; // or use System.getProperty("user.name")
+message = "AUTH " + username + "\n";
+out.write(message.getBytes());
+response = reader.readLine();
+System.out.println(response);
 
+//send REDY and receive job information
+message = "REDY\n";
+out.write(message.getBytes());
+response = reader.readLine();
+System.out.println(response);
 
-while(!str.equals("stop")){  
-str=br.readLine();  
-dout.write(("HELO\n").getBytes());
-dout.flush();  
-str2=in.readLine();  
-System.out.println("Server says: "+str2);  
-}  
-  
-dout.close();  
-s.close();  
+// parse job information
+String[] parts = response.split(" ");
+int jobID = Integer.parseInt(parts[2]);
+int numCPUs = Integer.parseInt(parts[4]);
+
+// schedule job and receive confirmation
+message = "SCHD " + jobID + " 0\n";
+out.write(message.getBytes());
+response = reader.readLine();
+System.out.println(response);
+
+// repeat for remaining jobs
+
+// close the socket
+
+socket.close();  
+
+// Send the QUIT command to the server to terminate the simulation
+out.write("QUIT\n".getBytes());
+out.flush();
+        
+// Close the socket and streams
+socket.close();
+in.close();
+out.close();
+
 }}  
