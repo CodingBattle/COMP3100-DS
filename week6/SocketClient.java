@@ -13,10 +13,14 @@ public class SocketClient {
         Socket socket = new Socket(SERVER_ADDRESS,SERVER_PORT);
         
         // Step 2: Initialise input and output streams associated with the socket
+        DataOutputStream out=new DataOutputStream(socket.getOutputStream());  
+        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+        //OutputStream out = socket.getOutputStream();
+        //InputStream in = socket.getInputStream();
+        
+
        
-        OutputStream out = socket.getOutputStream();
-        InputStream in = socket.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
         
         // Step 3: Connect ds-server
@@ -27,7 +31,7 @@ public class SocketClient {
         
         // Step 5: Receive OK
         String response = reader.readLine();
-S       System.out.println(response);
+        System.out.println(response);
         
 
         //send AUTH and receive ok
@@ -41,7 +45,8 @@ S       System.out.println(response);
             response = reader.readLine();
             System.out.println(response);
             
-            if(response.equals("OK")) {
+            String[] data = null;
+            //if(response.equals("OK")) {
                 // Step 8: While the last message from ds-server is not NONE do // jobs 1 - n
                 while(!response.equals("NONE")) {
                     // Step 9: Send REDY
@@ -55,7 +60,7 @@ S       System.out.println(response);
                     
                     // Step 11: Send a GETS message, e.g., GETS All
                     
-                    if(response.equals("JOBN")) {
+                    if(response.contains("JOBN")) {
                         message ="GETS All";
                         out.write(message.getBytes());
                         
@@ -64,8 +69,9 @@ S       System.out.println(response);
                         response = reader.readLine();
                         System.out.println(response);
                         
-                        String[] data = response.split("\\s+");
+                        data = response.split(" ");
                         int nRecs = Integer.parseInt(data[1]);
+                        
                         
                         // Step 13: Send OK
                         message ="OK";
@@ -74,7 +80,7 @@ S       System.out.println(response);
                         // Step 14: For i = 0; i < nRecs; ++i do
                         for(int i = 0; i < nRecs; i++) {
                             // Step 15: Receive each record
-                            String record = bufferedReader.readLine();
+                            String record = reader.readLine();
                             String[] recordData = record.split("\\s+");
                             String serverType = recordData[4];
                             
@@ -85,7 +91,7 @@ S       System.out.println(response);
                         
                         // Step 18: Send OK
                         message ="OK";
-                        out.write("OK");
+                        out.write(message.getBytes());
                         
                         
                         // Step 19: Receive .
@@ -100,10 +106,10 @@ S       System.out.println(response);
 
  }                  message = "QUIT";
                     out.write(message.getBytes());; // Step 24: send QUIT
-                    rresponse = reader.readLine();
+                    response = reader.readLine();
                     System.out.println(response); // Step 25: receive QUIT
                 }
-            }
+            
             socket.close(); // Step 26: close the socket
             //inputStream.close();
             //outputStream.close();
