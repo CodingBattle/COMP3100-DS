@@ -65,7 +65,7 @@ public class SocketClient {
                         response = reader.readLine();
                         System.out.println(response);
                         
-                        String[] data = response.split("\\s+");
+                        String[] data = response.split(" ");
                         int nRecs = Integer.parseInt(data[1]);
                         int recSize =Integer.parseInt(data[2]);
                         
@@ -77,11 +77,11 @@ public class SocketClient {
                         for(int i = 0; i < nRecs; i++) {
                             //Receive each record
                             String record = reader.readLine();
-                            String[] recordingData = record.split("\\s+");
+                            String[] recordingData = record.split("");
                             String serverType = recordingData[4];
-                            int serverCount = Integer.parseInt(recordingData[1]);
-                            if(serverCount > largestServerCount){
-                                largestServerCount = serverCount;
+                            int serverCounter = Integer.parseInt(recordingData[1]);
+                            if(serverCounter > largestServerCount){
+                                largestServerCount = serverCounter;
                                 largestServerType = serverType;
                             }
                             
