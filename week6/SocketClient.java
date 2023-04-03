@@ -3,29 +3,22 @@ import java.io.*;
 
 public class SocketClient {
     
-    private static final String SERVER_ADDRESS = "localhost";
-    private static final int SERVER_PORT = 50000;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         
         
-        // Step 1: Create a socket
-        Socket socket = new Socket(SERVER_ADDRESS,SERVER_PORT);
+        //Create a socket
+        Socket socket = new Socket("localhost",50000);
         
-        // Step 2: Initialise input and output streams associated with the socket
-        DataOutputStream out=new DataOutputStream(socket.getOutputStream());  
-        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-        //OutputStream out = socket.getOutputStream();
-        //InputStream in = socket.getInputStream();
-        
-
-       
+        //Initialise input and output streams associated with the socket
+        OutputStream out = socket.getOutputStream();
+        InputStream in = socket.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));  
 
         
-        // Step 3: Connect ds-server
+        //Connect ds-server
         
-        // Step 4: Send HELO
+        //Send HELO
         String message ="HELO\n";
         out.write(message.getBytes());
         
@@ -36,83 +29,94 @@ public class SocketClient {
 
         //send AUTH and receive ok
         if(response.equals("OK")) {
-            // Step 6: Send AUTH username
+            //Send AUTH username
             String username = "SANGGON";
             message = "AUTH " + username + "\n";
             out.write(message.getBytes());
             
-            // Step 7: Receive OK
+            //Receive OK
             response = reader.readLine();
             System.out.println(response);
             
-            String[] data = null;
-            //if(response.equals("OK")) {
-                // Step 8: While the last message from ds-server is not NONE do // jobs 1 - n
+            //String[] data = null;
+            if(response.equals("OK")) {
+                //While the last message from ds-server is not NONE do // jobs 1 - n
                 while(!response.equals("NONE")) {
-                    // Step 9: Send REDY
+                    //Send REDY
                     message ="REDY\n";
                     out.write(message.getBytes());
                     
                     
-                    // Step 10: Receive a message // typically one of the following: JOBN, JCPL and NONE
+                    //Receive a message one of the following: JOBN, JCPL and NONE
                     response = reader.readLine();
                     System.out.println(response);
                     
-                    // Step 11: Send a GETS message, e.g., GETS All
-                    
-                    if(response.contains("JOBN")) {
+                    //Send a GETS message, e.g., GETS All
+                    if(response.startsWith("JOBN")) {
+                        String[] jobs = response.split(" ");
+                        String largestServerType = " ";
+                        int largestServerCount = 0;
+
                         message ="GETS All";
                         out.write(message.getBytes());
                         
                         
-                        // Step 12: Receive DATA nRecs recSize // e.g., DATA 5 124
+                        //Receive DATA nRecs recSize 
                         response = reader.readLine();
                         System.out.println(response);
                         
-                        data = response.split(" ");
+                        String[] data = response.split("\\s+");
                         int nRecs = Integer.parseInt(data[1]);
+                        int recSize =Integer.parseInt(data[2]);
                         
-                        
-                        // Step 13: Send OK
+                        //Send OK
                         message ="OK";
                         out.write(message.getBytes());
                         
-                        // Step 14: For i = 0; i < nRecs; ++i do
+                        //For i = 0; i < nRecs; ++i do
                         for(int i = 0; i < nRecs; i++) {
-                            // Step 15: Receive each record
+                            //Receive each record
                             String record = reader.readLine();
-                            String[] recordData = record.split("\\s+");
-                            String serverType = recordData[4];
+                            String[] recordingData = record.split("\\s+");
+                            String serverType = recordingData[4];
+                            int serverCount = Integer.parseInt(recordingData[1]);
+                            if(serverCount > largestServerCount){
+                                largestServerCount = serverCount;
+                                largestServerType = serverType;
+                            }
                             
-                            
-                            // Step 16: Keep track of the largest server type and the number of servers of that type
-                            // code to keep track of the largest server type and number of servers of that type
+                            //Keep track of the largest server type and the number of servers of that type
+                            //code to keep track of the largest server type and number of servers of that type
                         }
                         
-                        // Step 18: Send OK
+                        //Send OK
                         message ="OK";
                         out.write(message.getBytes());
                         
                         
-                        // Step 19: Receive .
+                        //Receive
                         response = reader.readLine();
                         System.out.println(response);
                     }
                     
-                    // Step 20: If the message received at Step 10 is JOBN then
+                    //If the message received at Step 10 is JOBN then
                     if(response.equals("JOBN")) {
-                        // Step 21: Schedule a job // SCHD
+                        //Schedule a job // SCHD
                         // code to schedule the job
 
+
+                    //send QUIT
  }                  message = "QUIT";
-                    out.write(message.getBytes());; // Step 24: send QUIT
+                    out.write(message.getBytes());
+                    //receive QUIT
                     response = reader.readLine();
-                    System.out.println(response); // Step 25: receive QUIT
+                    System.out.println(response); 
                 }
             
-            socket.close(); // Step 26: close the socket
-            //inputStream.close();
-            //outputStream.close();
+            socket.close(); //close the socket and streams
+            in.close();
+            out.close();
         } 
     }
+}
 }
