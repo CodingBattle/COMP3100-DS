@@ -31,21 +31,6 @@ out.write(message.getBytes());
 response = reader.readLine();
 System.out.println(response);
 
-// parse job information
-String[] parts = response.split(" ");
-int jobID = Integer.parseInt(parts[2]);
-int numCPUs = Integer.parseInt(parts[4]);
-
-// schedule job and receive confirmation
-message = "SCHD " + jobID + " 0\n";
-out.write(message.getBytes());
-response = reader.readLine();
-System.out.println(response);
-
-
-// close the socket
-//socket.close();  
-
 // Send the QUIT command to the server to terminate the simulation
 out.write("QUIT\n".getBytes());
 out.flush();
