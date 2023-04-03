@@ -11,11 +11,13 @@ BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 //DataOutputStream dout=new DataOutputStream(s.getOutputStream());  
 //BufferedReader in= new BufferedReader(new InputStreamReader(s.getInputStream()));  
 
-//send HELO and receive ok
+//send message "HELO"
 String message = "HELO\n";
 out.write(message.getBytes());
+//receive response
 String response = reader.readLine();
 System.out.println(response);
+
 
 //send AUTH and receive ok
 String username = "SANGGON"; // or use System.getProperty("user.name")
@@ -24,7 +26,9 @@ out.write(message.getBytes());
 response = reader.readLine();
 System.out.println(response);
 
+
 //send REDY and receive job information
+
 message = "REDY\n";
 out.write(message.getBytes());
 response = reader.readLine();
@@ -36,15 +40,19 @@ String[] parts = response.split(" ");
 int jobID = Integer.parseInt(parts[2]);
 int numCPUs = Integer.parseInt(parts[4]);
 
+
 // schedule job and receive confirmation
-message = "SCHD " + jobID + " 0\n";
+message = "SCHD " + jobID +" 0\n";
 out.write(message.getBytes());
 response = reader.readLine();
 System.out.println(response);
 
 
-// close the socket
-//socket.close();  
+message = "SCHD " + numCPUs+" 0\n";
+out.write(message.getBytes());
+response = reader.readLine();
+System.out.println(response);
+
 
 // Send the QUIT command to the server to terminate the simulation
 out.write("QUIT\n".getBytes());

@@ -9,7 +9,8 @@ InputStream in = socket.getInputStream();
 BufferedReader reader = new BufferedReader(new InputStreamReader(in));  
 //DataInputStream din=new DataInputStream(s.getInputStream());  
 //DataOutputStream dout=new DataOutputStream(s.getOutputStream());  
-//BufferedReader in= new BufferedReader(new InputStreamReader(s.getInputStream()));  
+//BufferedReader in= new BufferedReader(new InputStreamReader(socket.getInputStream()));  
+
 
 //send HELO and receive ok
 String message = "HELO\n";
@@ -41,14 +42,9 @@ out.write(message.getBytes());
 response = reader.readLine();
 System.out.println(response);
 
-// repeat for remaining jobs
-message = "SCHD " + numCPUs + " 0\n";
-out.write(message.getBytes());
-response = reader.readLine();
-System.out.println(response);
 
 // close the socket
-socket.close();  
+//socket.close();  
 
 // Send the QUIT command to the server to terminate the simulation
 out.write("QUIT\n".getBytes());
