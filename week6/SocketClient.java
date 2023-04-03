@@ -99,11 +99,16 @@ public class SocketClient {
                         System.out.println(response);
                     }
                     
-                    //If the message received at Step 10 is JOBN then
+                    //If the message received  JOBN then
                     if(response.equals("JOBN")) {
-                        //Schedule a job // SCHD
-                        // code to schedule the job
-
+                        message ="OK";
+                        out.write(message.getBytes());
+                        /* 
+                        String[] recordingData = record.split("");
+                        message =("SCHD"+ recordingData[2]+largestServerType+"0");
+                        out.write(message.getBytes());
+                        */
+                      
 
                     //send QUIT
  }                  message = "QUIT";
