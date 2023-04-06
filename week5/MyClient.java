@@ -1,15 +1,14 @@
 import java.net.*;  
 import java.io.*;  
+
 class MyClient{  
 public static void main(String args[])throws Exception{  
 
-Socket socket = new Socket("localhost",50000);  
+Socket socket = new Socket("localhost",50000); //Create a socket
 OutputStream out = socket.getOutputStream();
 InputStream in = socket.getInputStream();
 BufferedReader reader = new BufferedReader(new InputStreamReader(in));  
-//DataInputStream din=new DataInputStream(s.getInputStream());  
-//DataOutputStream dout=new DataOutputStream(s.getOutputStream());  
-//BufferedReader in= new BufferedReader(new InputStreamReader(s.getInputStream()));  
+
 
 //send message "HELO"
 String message = "HELO\n";
@@ -28,7 +27,6 @@ System.out.println(response);
 
 
 //send REDY and receive job information
-
 message = "REDY\n";
 out.write(message.getBytes());
 response = reader.readLine();
@@ -39,7 +37,6 @@ System.out.println(response);
 String[] parts = response.split(" ");
 int jobID = Integer.parseInt(parts[2]);
 int numCPUs = Integer.parseInt(parts[4]);
-
 
 // schedule job and receive confirmation
 message = "SCHD " + jobID +" 0\n";
@@ -52,6 +49,14 @@ message = "SCHD " + numCPUs+" 0\n";
 out.write(message.getBytes());
 response = reader.readLine();
 System.out.println(response);
+
+
+
+
+
+
+
+
 
 
 // Send the QUIT command to the server to terminate the simulation
