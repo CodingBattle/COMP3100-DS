@@ -58,7 +58,7 @@ public class SocketClient {
                         String largestServerType = " ";
                         int largestServerCount = 0;
 
-                        message ="GETS All";
+                        message ="GETS All\n";
                         out.write(message.getBytes());
                         
                         
@@ -71,7 +71,7 @@ public class SocketClient {
                         int recSize =Integer.parseInt(data[2]);
                         
                         //Send OK
-                        message ="OK";
+                        message ="OK\n";
                         out.write(message.getBytes());
                         
                         //For i = 0; i < nRecs; ++i do
@@ -91,7 +91,7 @@ public class SocketClient {
                         }
                         
                         //Send OK
-                        message ="OK";
+                        message ="OK\n";
                         out.write(message.getBytes());
                         
                         
@@ -112,7 +112,7 @@ public class SocketClient {
                       
 
                     //send QUIT
- }                  message = "QUIT";
+ }                  message = "QUIT\n";
                     out.write(message.getBytes());
                     //receive QUIT
                     response = reader.readLine();
