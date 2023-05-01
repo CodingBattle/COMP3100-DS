@@ -23,7 +23,7 @@ public class SocketClient {
         String message ="HELO\n";
         out.write(message.getBytes());
         
-        // Step 5: Receive OK
+        // Receive OK
         String response = reader.readLine();
         System.out.println(response);
         
@@ -52,23 +52,26 @@ public class SocketClient {
                     response = reader.readLine();
                     System.out.println(response);
                     
-                    //Send a GETS message, e.g., GETS All
+                    //if the message received is JOBN
                     if(response.startsWith("JOBN")) {
+
                         String[] jobs = response.split(" ");
                         String largestServerType = " ";
                         int largestServerCount = 0;
 
+
+                        //Send GETS message, e.g..GETS ALL
                         message ="GETS All\n";
-                        out.write(message.getBytes());
-                        
-                        
+                        out.write(message.getBytes()); //moved them to here
+
                         //Receive DATA nRecs recSize 
                         response = reader.readLine();
-                        System.out.println(response);
-                        
+                        System.out.println(response); // moved them to here
+
+ 
                         String[] data = response.split(" ");
-                        int nRecs = Integer.parseInt(data[1]);
-                        int recSize =Integer.parseInt(data[2]);
+                        int nRecs = Integer.parseInt(data[2]);
+                        //int recSize =Integer.parseInt(data[2]);
                         
                         //Send OK
                         message ="OK\n";
@@ -76,10 +79,13 @@ public class SocketClient {
                         
                         //For i = 0; i < nRecs; ++i do
                         for(int i = 0; i < nRecs; i++) {
+                            
                             //Receive each record
-                            String record = reader.readLine();
-                            String[] recordingData = record.split("");
-                            String serverType = recordingData[4];
+                            //String record = reader.readLine(); //no need this line
+                            String record = reader.readLine(); //added a new line
+                            String[] recordingData = record.split(""); // here added \\s
+                            String serverType = recordingData[4]; // swapped with 4 with 0
+
                             int serverCounter = Integer.parseInt(recordingData[1]);
                             if(serverCounter > largestServerCount){
                                 largestServerCount = serverCounter;
@@ -98,22 +104,29 @@ public class SocketClient {
                         //Receive
                         response = reader.readLine();
                         System.out.println(response);
+
+                        message = "SCHD" + jobs[2]  + " " + largestServerType + "0";
+                        out.write(message.getBytes());
                     }
                     
-                    //If the message received  JOBN then
-                    if(response.equals("JOBN")) {
-                        message ="OK";
+                    //else if the message received  JOBN then
+                    else if(response.startsWith("JCPL")) {
+                        //SEND MESSAGE REDY..............new lines
+                        message = "REDY";
                         out.write(message.getBytes());
-                        /* 
-                        String[] recordingData = record.split("");
-                        message =("SCHD"+ recordingData[2]+largestServerType+"0");
-                        out.write(message.getBytes());
-                        */
                       
+                    }
+                    //receive a message..............new lines
+                    response = reader.readLine();
+                    System.out.println(response); 
 
+                }
+            }
+                    
                     //send QUIT
- }                  message = "QUIT\n";
+                    message = "QUIT\n";
                     out.write(message.getBytes());
+
                     //receive QUIT
                     response = reader.readLine();
                     System.out.println(response); 
@@ -123,6 +136,8 @@ public class SocketClient {
             in.close();
             out.close();
         } 
-    }
+    
 }
-}
+
+
+
