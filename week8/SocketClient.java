@@ -12,8 +12,8 @@ public class SocketClient {
         Socket socket = new Socket("localhost",50000);
         
         //Initialise input and output streams associated with the socket
-        OutputStream out = socket.getOutputStream();
         InputStream in = socket.getInputStream();
+        OutputStream out = socket.getOutputStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));  
 
         
@@ -28,7 +28,6 @@ public class SocketClient {
         System.out.println(response);
         
 
-        //send AUTH and receive ok
         if(response.equals("OK")) {
             //Send AUTH username
             String username = "SANGGON";
@@ -46,91 +45,90 @@ public class SocketClient {
                     //Send REDY
                     message ="REDY\n";
                     out.write(message.getBytes());
-                    
-                    
+
+                 
                     //Receive a message one of the following: JOBN, JCPL and NONE
                     response = reader.readLine();
                     System.out.println(response);
+
+                    while(!response.equals("NONE")){
                     
                     //if the message received is JOBN
                     if(response.startsWith("JOBN")) {
 
-                        String[] jobs = response.split(" ");
+                        String[] jobs = response.split(" "); 
                         String largestServerType = " ";
                         int largestServerCount = 0;
 
+                         //Send GETS message, e.g..GETS ALL
+                         message ="GETS All\n";
+                         out.write(message.getBytes()); 
 
-                        //Send GETS message, e.g..GETS ALL
-                        message ="GETS All\n";
-                        out.write(message.getBytes()); //moved them to here
-
-                        //Receive DATA nRecs recSize 
+                         //Receive DATA nRecs recSize 
                         response = reader.readLine();
-                        System.out.println(response); // moved them to here
+                        System.out.println(response); 
 
- 
-                        String[] data = response.split(" ");
-                        int nRecs = Integer.parseInt(data[2]);
-                        //int recSize =Integer.parseInt(data[2]);
+                        String[] data = response.split("\\s+");
+                        int nRecs = Integer.parseInt(data[1]);
                         
+
                         //Send OK
                         message ="OK\n";
                         out.write(message.getBytes());
                         
                         //For i = 0; i < nRecs; ++i do
+                        //receive each record and keep track of the largest server type
                         for(int i = 0; i < nRecs; i++) {
-                            
-                            //Receive each record
-                            //String record = reader.readLine(); //no need this line
-                            String record = reader.readLine(); //added a new line
-                            String[] recordingData = record.split(""); // here added \\s
-                            String serverType = recordingData[4]; // swapped with 4 with 0
 
-                            int serverCounter = Integer.parseInt(recordingData[1]);
-                            if(serverCounter > largestServerCount){
-                                largestServerCount = serverCounter;
-                                largestServerType = serverType;
-                            }
+                        response = reader.readLine();
+                        System.out.println(response); 
                             
-                            //Keep track of the largest server type and the number of servers of that type
-                            //code to keep track of the largest server type and number of servers of that type
+                        
+                        //String record = reader.readLine(); //no need this line
+                        String[] serverDetails= response.split(" ");
+                        String serverType = serverDetails[0]; 
+                        int serverCounter = Integer.parseInt(serverDetails[1]);
+                        if(serverCounter > largestServerCount){
+                            largestServerCount = serverCounter;
+                            largestServerType = serverType;
+                    
+                            }
+                        }
+                            //Send OK
+                            message ="OK\n";
+                            out.write(message.getBytes());
+
+                            //schedule the job
+                            message ="SCHD"+ jobs[2]  + " " + largestServerType + "0";
+                            out.write(message.getBytes());
+                                         
                         }
                         
-                        //Send OK
-                        message ="OK\n";
+                        else if(response.equals("JCPL")) {
+                        //Send REDY
+                        message ="REDY";
                         out.write(message.getBytes());
-                        
-                        
-                        //Receive
+                        }
+
+                         //receive message(JOBN, JCPL, NONE)
+                         response = reader.readLine();
+                         System.out.println(response); 
+
+                    }
+
+                        //send QUIT
+                        message = "QUIT";
+                        out.write(message.getBytes());
+
+                        //receive QUIT
                         response = reader.readLine();
-                        System.out.println(response);
+                        System.out.println(response); 
 
-                        message = "SCHD" + jobs[2]  + " " + largestServerType + "0";
-                        out.write(message.getBytes());
-                    }
-                    
-                    //else if the message received  JOBN then
-                    else if(response.startsWith("JCPL")) {
-                        //SEND MESSAGE REDY..............new lines
-                        message = "REDY";
-                        out.write(message.getBytes());
-                      
-                    }
-                    //receive a message..............new lines
-                    response = reader.readLine();
-                    System.out.println(response); 
+                        }
 
-                }
             }
-                    
-                    //send QUIT
-                    message = "QUIT\n";
-                    out.write(message.getBytes());
-
-                    //receive QUIT
-                    response = reader.readLine();
-                    System.out.println(response); 
-                }
+             
+        }
             
             socket.close(); //close the socket and streams
             in.close();
