@@ -42,7 +42,7 @@ public class FcAlgorithm {
 
         while (true) {
             //Send REDY
-            message ="REDY\n";
+            message ="REDY" + "\n";
             out.write(message.getBytes());
 
             //Receive OK
@@ -85,12 +85,12 @@ public class FcAlgorithm {
                     }
                 }
                 //Send OK
-                message ="OK";
+                message ="OK" + "\n";
                 out.write(message.getBytes());
                 
 
                 // Schedule the job to the first server in the list
-                message ="SCHD " + jobParams[2] + " " + largestServerType + " 0" + "\n";
+                message = "SCHD\n" + jobParams[2] + largestServerType + "0";
                 out.write(message.getBytes());
               
                 if (!response.equals("OK")) {
