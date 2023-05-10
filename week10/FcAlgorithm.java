@@ -54,7 +54,7 @@ public class FcAlgorithm {
             }
 
             if (response.startsWith("JOBN")) {
-                String[] jobParams = response.split("\\s+");
+                String[] jobParams = response.split(" ");
 
                 // Send a GETS Capable message to find the first server that can handle the job
                 message ="GETS Capable" + " " + jobParams[4] + " " + jobParams[5] + " " + jobParams[6] + "\n";
@@ -70,12 +70,12 @@ public class FcAlgorithm {
                     
                 }
 
-                String[] dataParams = response.split("\\s+");
+                String[] dataParams = response.split(" ");
                 int nRecs = Integer.parseInt(dataParams[1]);
                 for (int i = 0; i < nRecs; i++) {
                     response = reader.readLine();
                     System.out.println(response);
-                    String[] serverParams = response.split("\\s+");
+                    String[] serverParams = response.split(" ");
                     if (serverParams[0].equals(".")) {
                         break;
                     }
