@@ -90,7 +90,7 @@ public class FcAlgorithm {
                 
 
                 // Schedule the job to the first server in the list
-                message = "SCHD" + jobParams[2] + largestServerType + "0\n";
+                message = "SCHD" + jobParams[2] + largestServerType + "0";
                 out.write(message.getBytes());
               
                 if (!response.equals("OK")) {
