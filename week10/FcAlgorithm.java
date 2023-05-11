@@ -48,10 +48,12 @@ public class FcAlgorithm {
             //Receive OK
             response = reader.readLine();
             System.out.println(response);
-
+             
+            /* 
             if (response.equals("NONE")) {
                 break;
             }
+            */
 
             if (response.startsWith("JOBN")) {
                 String[] jobParams = response.split(" ");
@@ -64,14 +66,22 @@ public class FcAlgorithm {
                 response = reader.readLine();
                 System.out.println(response);
 
+                message ="OK\n";
+                out.write(message.getBytes());
+
+
+                /* 
                 if (!response.startsWith("DATA")) {
                     response = reader.readLine();
                     System.out.println("Invalid response:" + response);
                     
                 }
+                */
+
 
                 String[] dataParams = response.split(" ");
                 int nRecs = Integer.parseInt(dataParams[1]);
+                System.out.println(nRecs);
                 for (int i = 0; i < nRecs; i++) {
                     response = reader.readLine();
                     System.out.println(response);
@@ -79,11 +89,18 @@ public class FcAlgorithm {
                     if (serverParams[0].equals(".")) {
                         break;
                     }
-                    if (Integer.parseInt(serverParams[2]) > largestServerCount) {
+                    System.out.println(serverParams[4]);
+                    System.out.println(largestServerCount);
+                    if (Integer.parseInt(serverParams[4]) > largestServerCount) {
                         largestServerType = serverParams[1];
-                        largestServerCount = Integer.parseInt(serverParams[2]);
+                        largestServerCount = Integer.parseInt(serverParams[4]);
                     }
                 }
+
+                 
+
+
+
                 //Send OK
                 message ="OK\n";
                 out.write(message.getBytes());
@@ -99,6 +116,7 @@ public class FcAlgorithm {
                 }
             }
         }
+        
          
         //Send QUIT
         message ="QUIT\n";
