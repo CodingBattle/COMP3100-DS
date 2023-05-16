@@ -49,11 +49,6 @@ public class FcAlgorithm {
             response = reader.readLine();
             System.out.println(response);
              
-            /* 
-            if (response.equals("NONE")) {
-                break;
-            }
-            */
 
             if (response.startsWith("JOBN")) {
                 String[] jobParams = response.split(" ");
@@ -70,15 +65,6 @@ public class FcAlgorithm {
                 out.write(message.getBytes());
 
 
-                /* 
-                if (!response.startsWith("DATA")) {
-                    response = reader.readLine();
-                    System.out.println("Invalid response:" + response);
-                    
-                }
-                */
-
-
                 String[] dataParams = response.split(" ");
                 int nRecs = Integer.parseInt(dataParams[1]);
                 System.out.println(nRecs);
@@ -86,9 +72,11 @@ public class FcAlgorithm {
                     response = reader.readLine();
                     System.out.println(response);
                     String[] serverParams = response.split(" ");
+                    /* 
                     if (serverParams[0].equals(".")) {
                         break;
                     }
+                    */
                     System.out.println(serverParams[4]);
                     System.out.println(largestServerCount);
                     if (Integer.parseInt(serverParams[4]) > largestServerCount) {
@@ -97,37 +85,26 @@ public class FcAlgorithm {
                     }
                 }
 
-                 
-
-
-
+                
                 //Send OK
                 message ="OK\n";
                 out.write(message.getBytes());
                 
 
                 // Schedule the job to the first server in the list
-                message = "SCHD" + jobParams[2] + largestServerType + "0";
+                message = "SCHD\n" + jobParams[2] + largestServerType + "\n";
                 out.write(message.getBytes());
-              
-                if (!response.equals("OK")) {
-                    response = reader.readLine();
-                    System.out.println("Invalid response:" + response);
-                }
+                       
             }
-        }
-        
-         
-        //Send QUIT
-        message ="QUIT\n";
-        out.write(message.getBytes());
-      
-        if (!response.equals("QUIT")) {
-            response = reader.readLine();
-            System.out.println("Invalid response:" + response);
+
+                //Send QUIT
+                message ="QUIT\n";
+                out.write(message.getBytes());
+
         }
 
-        socket.close();
+      }
+                socket.close();
     }
-}
+   
 }
