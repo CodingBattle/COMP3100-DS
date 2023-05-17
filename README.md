@@ -1,17 +1,9 @@
 ## COMP3100 Disributed Systems Workshop
 
-### for marking go to week7 folder please
+### Stage 2: Design and implementation of a new scheduling algorithm
 
-## client file is kept in week7 folder
+### This task is to design and implement one or more new scheduling algorithm
 
-How to compile Client/Server file in CMD or Terminal
+### that optimises average turnaround time. In particular, your scheduling algorithm as part of your client shall schedule jobs to servers aiming to minimise the average turnaround time without sacrificing too much of other performance metrics, i.e., resource utilisation and server rental cost.
 
-(1) put the Client and Server file into program 
 
-(2) open the CMD or Terminal and cd to root path
-
-(3) execute javac program/server file or client file
-
-(4) execute java program.server or .client
-
-(5) it is run !
