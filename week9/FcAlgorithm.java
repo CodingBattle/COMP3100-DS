@@ -20,7 +20,7 @@ public class FcAlgorithm {
         String message ="HELO\n";
         out.write(message.getBytes());
         
-        // Receive OK
+        //Receive OK
         String response = reader.readLine();
         System.out.println(response);
  
@@ -56,7 +56,7 @@ public class FcAlgorithm {
             if (response.startsWith("JOBN")) {
                 String[] jobParams = response.split("\\s+");
 
-                // Send a GETS Capable message to find the first server that can handle the job
+                //Send a GETS Capable message to find the first server that can handle the job
                 message ="GETS Capable" + " " + jobParams[4] + " " + jobParams[5] + " " + jobParams[6] + "\n";
                 out.write(message.getBytes());
 
@@ -89,7 +89,7 @@ public class FcAlgorithm {
                 out.write(message.getBytes());
                 
 
-                // Schedule the job to the first server in the list
+                //Schedule the job to the first server in the list
                 message = "SCHD" + jobParams[2] + largestServerType + "0\n";
                 out.write(message.getBytes());
               
