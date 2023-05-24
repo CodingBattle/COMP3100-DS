@@ -76,7 +76,7 @@ public class FcAlgorithm {
                     if (serverParams[0].equals(".")) {
                         break;
                     }
-                    System.out.println("Testing1");
+                  
                     System.out.println(serverParams[4]);    //128
                     System.out.println(largestServerCount);  //128
                     if (Integer.parseInt(serverParams[4]) > largestServerCount) {
@@ -84,15 +84,17 @@ public class FcAlgorithm {
                         largestServerCount = Integer.parseInt(serverParams[4]);
                     }
                 }
-                System.out.println("Testing2");
+               
                 //Send OK
                 message ="OK\n";
                 out.write(message.getBytes());
                 
-                System.out.println("Testing3");
+              
                 //Schedule the job to the first server in the list
-                message = "SCHD" + jobParams[2] + largestServerType + "0\n";
+                message = "SCHD" + " " +jobParams[2] + " " +largestServerType + " " +"0\n";
                 out.write(message.getBytes());
+
+                
                        
             }
 
@@ -104,6 +106,6 @@ public class FcAlgorithm {
 
       }
                 socket.close();
+        
     }
-   
 }
