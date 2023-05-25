@@ -19,6 +19,7 @@ public class FcAlgorithm {
         //Send HELO
         String message ="HELO\n";
         out.write(message.getBytes());
+        out.flush();
         
         // Receive OK
         String response = reader.readLine();
@@ -31,6 +32,7 @@ public class FcAlgorithm {
             String username = "SANGGON";
             message = "AUTH " + username + "\n";
             out.write(message.getBytes());
+            out.flush();
             
             //Receive OK
             response = reader.readLine();
@@ -44,6 +46,7 @@ public class FcAlgorithm {
             //Send REDY
             message ="REDY\n";
             out.write(message.getBytes());
+            out.flush();
 
             //Receive OK
             response = reader.readLine();
@@ -51,57 +54,61 @@ public class FcAlgorithm {
              
 
             if (response.startsWith("JOBN")) {
-                String[] jobParams = response.split(" ");
+                String[] jobParams = null;
+                jobParams = response.split(" ");
 
                 //Send a GETS Capable message to find the first server that can handle the job
                 message ="GETS Capable" + " " + jobParams[4] + " " + jobParams[5] + " " + jobParams[6] + "\n";
                 out.write(message.getBytes());
-
+                out.flush();
                
                 response = reader.readLine();
                 System.out.println(response);
 
+                String[] dataParams = null;
+                dataParams = response.split(" ");
+                int nRecs = Integer.parseInt(dataParams[1]);
+
                 message ="OK\n";
                 out.write(message.getBytes());
-
-
-                String[] dataParams = response.split(" ");
-                int nRecs = Integer.parseInt(dataParams[1]);
-                //System.out.println(nRecs);
+                out.flush();
+              
                 for (int i = 0; i < nRecs; i++) {
                     response = reader.readLine();
-                    System.out.println(response);
-                    String[] serverParams = response.split(" ");
-                    
+                    //System.out.println(response);
+                    String[] serverParams = null;
+                    serverParams = response.split(" ");
+                    /* 
                     if (serverParams[0].equals(".")) {
                         break;
                     }
-                  
-                    System.out.println(serverParams[4]);    //128
-                    System.out.println(largestServerCount);  //128
-                    if (Integer.parseInt(serverParams[4]) > largestServerCount) {
+                    */
+
+                    //System.out.println(serverParams[4]);    //128
+                    //System.out.println(largestServerCount);  //128
+                    int core = Integer.parseInt(serverParams[4]);
+                    if (core > largestServerCount) {
                         largestServerType = serverParams[1];
-                        largestServerCount = Integer.parseInt(serverParams[4]);
+                        largestServerCount = core;
                     }
                 }
                
                 //Send OK
                 message ="OK\n";
                 out.write(message.getBytes());
-                
+                out.flush();
               
                 //Schedule the job to the first server in the list
                 message = "SCHD" + " " +jobParams[2] + " " +largestServerType + " " +"0\n";
                 out.write(message.getBytes());
-
-                
+                out.flush();
                        
             }
 
                 //Send QUIT
                 message ="QUIT\n";
                 out.write(message.getBytes());
-
+                out.flush();
         }
 
       }
