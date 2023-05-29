@@ -75,17 +75,9 @@ public class FcAlgorithm {
               
                 for (int i = 0; i < nRecs; i++) {
                     response = reader.readLine();
-                    //System.out.println(response);
                     String[] serverParams = null;
                     serverParams = response.split(" ");
-                    /* 
-                    if (serverParams[0].equals(".")) {
-                        break;
-                    }
-                    */
-
-                    //System.out.println(serverParams[4]);    //128
-                    //System.out.println(largestServerCount);  //128
+                   
                     int core = Integer.parseInt(serverParams[4]);
                     if (core > largestServerCount) {
                         largestServerType = serverParams[1];
